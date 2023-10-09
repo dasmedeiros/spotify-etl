@@ -2,6 +2,7 @@
 from urllib.parse import parse_qs, urlparse
 import pandas as pd
 from datetime import datetime, timedelta
+from sqlalchemy import create_engine
 import os
 from dotenv import load_dotenv
 from spotify_token import SpotifyTokenManager, SpotifyConfig, HttpClient
@@ -296,8 +297,16 @@ class SpotifyETL:
         return track_features_df
 
 def main():
+    # Loading environment variables
     load_dotenv()
 
+    # Defining the connection to the database
+    engine = create_engine(os.getenv("POSTGRESQL_CONN"))
+
+    # Running the ETL functions
+    print("Started")
+
+    # Create a SpotifyConfig object with configuration values from environment variables
     config = SpotifyConfig(
         os.getenv("SPOTIFY_CLIENT_ID"),
         os.getenv("SPOTIFY_CLIENT_SECRET"),
@@ -307,8 +316,10 @@ def main():
         "https://accounts.spotify.com/api/token"
     )
 
+    # Create a SpotifyTokenManager object with the configuration and HTTP client
     token_manager = SpotifyTokenManager(config, HttpClient())
 
+    # Create a SpotifyETL object with token manager and endpoints
     etl = SpotifyETL(
         token_manager,
         recent_tracks_url="https://api.spotify.com/v1/me/player/recently-played", 
@@ -316,19 +327,20 @@ def main():
         tracks_features_url="https://api.spotify.com/v1/audio-features"
         )
 
+    # Extracting the tracks
     tracks_df = etl.spotify_tracks_etl()
+    tracks_df.to_sql('recent_tracks', engine, if_exists='replace')
+
+    # Extracting the details and features
     if tracks_df is not None:
         details_df = etl.spotify_details_etl(tracks_df)
+        details_df.to_sql('track_details', engine, if_exists='replace')
+
         features_df = etl.spotify_features_etl(tracks_df)
+        features_df.to_sql('track_features', engine, if_exists='replace')
 
-    print("Here are the First 5 Rows of DataFrame 'tracks_df':")
-    print(tracks_df.head())
-
-    print("Here are the First 5 Rows of DataFrame 'details_df':")
-    print(details_df.head())
-
-    print("Here are the First 5 Rows of DataFrame 'features_df':")
-    print(features_df.head())
+    # Print the final message
+    print("Database updated successfully!")
 
 if __name__ == "__main__":
     main()

@@ -31,15 +31,15 @@ dag = DAG(
 )
 
 def ETL():
+    # Loading environment variables
+    load_dotenv()
+    
     # Defining the connection to the database
     conn = BaseHook.get_connection('elephant_sql')
     engine = create_engine(f'postgresql://{conn.login}:{conn.password}@{conn.host}/{conn.schema}')
     
     # Running the ETL functions
     print("Started")
-
-    # Loading environment variables
-    load_dotenv()
 
     # Create a SpotifyConfig object with configuration values from environment variables
     config = SpotifyConfig(
@@ -51,7 +51,7 @@ def ETL():
         "https://accounts.spotify.com/api/token"
     )
 
-    # Create a SpotifyTokenManager object with the configuration and HTTP clien
+    # Create a SpotifyTokenManager object with the configuration and HTTP client
     token_manager = SpotifyTokenManager(config, HttpClient())
 
     # Create a SpotifyETL object with token manager and endpoints
