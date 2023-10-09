@@ -55,6 +55,7 @@ Before using this project, ensure you have the following prerequisites:
 - Python 3.7 or higher installed on your system.
 - Access to a PostgreSQL database for storing Spotify data. You can use free instances available at [ElephantSQL](https://www.elephantsql.com/) for testing purposes.
 - Spotify API credentials (client ID, client secret, refresh token) obtained by creating a Spotify Developer application. You can refer to [my other project](https://github.com/dasmedeiros/spotify-auth) where the process of obtaining and saving credentials in a `.env` file is facilitated.
+- If you wish to automate the ETL using Apache Airflow, have it set up.
 
 ### Installation
 
