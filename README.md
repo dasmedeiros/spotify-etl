@@ -53,9 +53,11 @@ The Spotify ETL project is designed to automate the process of retrieving your r
 Before using this project, ensure you have the following prerequisites:
 
 - Python 3.7 or higher installed on your system.
-- Access to a PostgreSQL database for storing Spotify data. You can use free instances available at [ElephantSQL](https://www.elephantsql.com/) for testing purposes.
-- Spotify API credentials (client ID, client secret, refresh token) obtained by creating a Spotify Developer application. You can refer to [my other project](https://github.com/dasmedeiros/spotify-auth) where the process of obtaining and saving credentials in a `.env` file is facilitated.
+- Access to a PostgreSQL database for storing Spotify data. You can use free instances available at [ElephantSQL](https://www.elephantsql.com/)* for testing purposes.
+- Spotify API credentials (refer to .env.example file) obtained by creating a Spotify Developer application. You can refer to [my other project](https://github.com/dasmedeiros/spotify-auth) where the process of obtaining and saving credentials in a `.env` file is facilitated.
 - If you wish to automate the ETL using Apache Airflow, have it set up.
+
+* The connection URL might come in the following format: postgres://{user}:{password}@{server}/{database} -> add the 'ql' to the string making it: postgresql://{user}:{password}@{server}/{database}
 
 ### Installation
 
@@ -86,8 +88,10 @@ Before using this project, ensure you have the following prerequisites:
 To manually run the Spotify ETL process and update your Spotify data in the database, follow these steps:
 
 1. Make sure you have completed the installation steps mentioned above.
+   
+2. If you will run this manually, make sure you have the tables and relationships created in your database. If you use Airflow to automate the process, there's a task to handle this. 
 
-2. Run the ETL process using the following command:
+3. Run the ETL process using the following command:
 
    ```
    python spotify_etl.py
@@ -105,7 +109,7 @@ To set up Apache Airflow and schedule the ETL process, refer to the [official Ai
 
 This Spotify ETL project serves as a foundation for various future developments, including:
 
-- **Cloud Deployment**: Consider deploying the ETL process on a cloud platform (e.g., AWS, Google Cloud) to automate data updates and reduce maintenance efforts.
+- **Cloud Deployment**: Consider deploying the ETL process on a cloud platform to automate data updates and reduce maintenance efforts.
 
 - **Data Analysis**: Use the collected Spotify data for exploratory data analysis (EDA) to gain insights into your listening habits.
 
